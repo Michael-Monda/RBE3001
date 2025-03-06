@@ -1,0 +1,31 @@
+name: Generate Changelog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate changelog
+        uses: saadmk11/changelog-ci@v1.1.2
+        with:
+          output: CHANGELOG.md
+          includeLabels: true
+          issues: true
+          pullRequests: true
+          unreleasedOnly: true
+
+      - name: Commit and push if changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update changelog" --allow-empty
+          git push
